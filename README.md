@@ -20,9 +20,6 @@ output: github_document
 ## Introducción
 
 Bellbeat como fabricante de dispositivos inteligentes, desea actuar aún más inteligente y ser más competitivo en el mercado global. Deseoso de demostrar potencial, decide que para encontrar oportunidades de crecimiento y estrategias de marketing, debe empezar por la información que generan esos mismos dispositivos inteligentes usados por sus clientes (esa información puede ser desde ritmo cardiaco hasta las horas de sueño), así realizar un análisis sobre esos datos.
-<div style="text-align: center;">
-<img src="https://www.datacrm.com/upload/article/b/estrategias-de-marketing-digital-efectivas.webp" style="width: 90%; height: auto;">
-</div>
 
 ## Descripción
 
