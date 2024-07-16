@@ -1,0 +1,170 @@
+---
+title: "Bellabeat aún más inteligente"
+subtitle: 'Análisis y Conclusiones'
+output:
+  prettydoc::html_pretty:
+    theme: cayman
+    highlight: github
+    math: katex
+author: 'Miguel Angel Cubillas C.'
+date: "2024-07-13"
+lang: es-ES
+---
+<div style="text-align: center;">
+  <img src="Logo.png" alt="Logo">
+</div>
+
+[Introducción]
+
+[Descripción]
+
+[Librerías y Datasets]
+
+[Análisis]
+
+[Conclusiones y Recomendaciones]
+
+
+### Introducción
+Bellbeat como fabricante de dispositivos inteligentes, desea actuar aún más inteligente y ser más competitivo en el mercado global. Deseoso de demostrar potencial, decide que para encontrar oportunidades de crecimiento y estrategias de marketing, debe empezar por la información que generan esos mismos dispositivos inteligentes usados por sus clientes (esa información puede ser desde ritmo cardiaco hasta las horas de sueño), así realizar un análisis sobre esos datos. 
+
+### Descripción
+Analizar los distintos usos a los que dedican las personas sus dispositivos inteligentes proveerá estrategias de marketing para Bellabeat que le permita crecer continuamente, se analizarán las tendencias de uso, qué mejoras se podrían implementar con el fin de entregar distintas recomendaciones que se ajuste a las necesidades de los clientes con el fin de ayudarle a tener un mayor control y cuidado sobre su salud.
+
+### Librerías y Datasets
+```{r Librerías y asignación de datasets}
+library(tidyverse)
+library(lubridate)
+library(tibble)
+library(skimr)
+daily_activity <- read.csv("data_cleaned/daily_activity_union.csv")
+daily_activity$Id <- as.character(daily_activity$Id)
+daily_activity$ActivityDate <- as.Date((daily_activity$ActivityDate))
+
+sleep_activity <- read.csv("data_cleaned/sleep_activity.csv")
+sleep_activity$Id <- as.character(sleep_activity$Id)
+sleep_activity$SleepDay <- as.Date(sleep_activity$SleepDay)
+
+
+intensities_activity <- read.csv("data_cleaned/intensities_union.csv")
+intensities_activity$Id <- as.character(intensities_activity$Id)
+intensities_activity$Date <- as_datetime(intensities_activity$Date)
+
+heartRate_activity <- read.csv("data_cleaned/heartrate_union.csv")
+heartRate_activity$Id <- as.character(heartRate_activity$Id)
+heartRate_activity$Time <- as.Date(heartRate_activity$Time)
+
+```
+
+### Análisis
+
+#### Ritmo Cardiaco
+En el siguiente gráfico acerca del ritmo cardiaco podemos observar que hay un sesgo a la derecha, lo cual es completamente razonable debido a que las mujeres que usan los dispositivos (y en general la población) no se dedican  a hacer deportes de muy alta intensidad, suele ser intensidad moderada o media-alta. Lo cual logramos deducir que la mayoría de mujeres quienes adquieren la tecnología FitBit o dispositivos de cuidado no se dedican al deportes profesional o al deporte de muy alta intensidad.
+
+Debido a que solo hay registro del ritmo cardiaco de 15 clientes se duda de la conclusión por falta de información. A pesar del tamaño de la muestra logramos ver que las mujeres que suelen adquirir tecnología FitBit tratan de hacer un mínimo de ejercicio como de intensidad media o baja.
+```{r Histograma Ritmo Cardiaco}
+ggplot(data = heartRate_activity) +
+  geom_histogram(mapping = aes(x=Value), fill = 'blue')+
+  labs(title = 'Ritmo Cardiaco', x='Ritmos cardiacos registrados', y='Frecuencia')
+```
+
+#### Registro de pasos
+
+En el siguiente gráfico de línea podemos corroborar que las personas cuando adquieren algún dispositivo inteligente (FitBit) intentan mejorar su salud aumentando paulatinamente los pasos que se dan con el tiempo, es decir que luchan contra el sedentarísmo, y estabilizar un poco la actividad física.
+
+Los primeros días son los más débiles o menos pasos registrados, puede deberse a que el principio de nuevas rutinas es más complicada y agotadora, o puede deberse a que el usuario no carga todo el tiempo con el dispositivo que registra los pasos, al menos desde un principio.Sin embargo, al luego de aproximadamente un mes y quince días decae mucho la rutina de pasos registrados, podría deberse a la falta consistencia de la rutina.
+```{r Gráfico pasos totales}
+suma_steps_add <- daily_activity %>% 
+  select(ActivityDate, TotalSteps) %>% 
+  group_by(ActivityDate) %>% 
+  summarize(total_steps_diary = sum(TotalSteps))
+
+ggplot(data = suma_steps_add) +
+  geom_line(mapping = aes(x = ActivityDate, y = total_steps_diary), color = "blue") +
+  labs(title = 'Pasos totales por Día', x = 'Fecha', y = 'Suma de Pasos') +
+  theme_minimal()
+
+```
+#### Luchando contra el sedentarísmo
+
+El patrón es claro, lo dispositivos inteligentes impula a las personas a reducir considerablemente su sedentarímos, lo cual empieza con simples pasos diarios.
+```{r Sedentarísmo}
+sedentary_evolu <- daily_activity %>% 
+  select(c(ActivityDate, SedentaryMinutes))  %>% 
+  group_by(ActivityDate) %>% 
+  summarize(media_sedentary = mean(SedentaryMinutes))
+
+
+ggplot(data = sedentary_evolu) +
+  geom_line(mapping = aes(x=ActivityDate, y= media_sedentary),color='blue') +
+  labs(title = "Sedentarísmo en presencia de FitBit", x="Tiempo", y="Media de sedentarísmo por día")
+
+```
+#### Registro de intensidades
+
+La intensidad al realizar una labor se ve drásticamente mejorada, lo que influye en un ritmo cardiaco más estable. Por desgracia se demuestra que las personas tienen problemas para mantener una consistencia en los hábitos soludables, los cuales son actividades física leves.
+```{r Intensidades}
+intensities_date <- intensities_activity %>% 
+  mutate(Date = as.Date(Date)) %>%  # Convertir la columna Date a solo fecha
+  group_by(Date) %>%  # Agrupar por la columna Date ya convertida
+  summarize(media_intensities = mean(AverageIntensity))
+
+ggplot(data=intensities_date) +
+  geom_line(mapping = aes(x=Date, y=media_intensities)) +
+  labs(title = "Intensidades registradas",x="Tiempo de registro",y="Intensidad Media")
+
+
+```
+#### Desblance alimenticio
+
+Un hallazgo interensante es que cuanta más intensidad en sus ejercicios más calorías se consumen, la razón de ello es muy variada, desde relacionar el cansancio con el hambre hasta la falta de sueño, pero independientemente de la razón es una señal clara de que las persona necesitan de una mejor guía alimenticia.
+
+```{r}
+
+intensities <- intensities_activity %>% 
+  mutate(Date = as.Date(Date)) %>%  # Convertir la columna Date a solo fecha
+  group_by(Id,Date) %>%  # Agrupar por la columna Date ya convertida
+  summarize(media_intensities = mean(AverageIntensity))
+
+intentisities_calories <- inner_join(daily_activity %>% 
+  select(Id,ActivityDate,Calories), intensities, by=c("Id"="Id","ActivityDate"="Date"))
+
+ggplot(data=intentisities_calories)+
+  geom_smooth(mapping = aes(x=media_intensities,y=Calories)) +
+  geom_point(mapping = aes(x=media_intensities,y=Calories)) +
+  labs(title = "Correlación entre la intensidad y las calorías", x="Intensidades Medias",y="Calorías diarias")
+
+
+```
+#### Eficiencia de sueño
+
+Pasado un mes con una rutina relativamente clara, o por lo menos con debido seguimiento la eficiencia de sueño se ve con notables mejorías, pasando de una media de 40min a una media de 30min el tiempo necesario para dormir.
+```{r}
+time_sleep <- sleep_activity %>% 
+  group_by(SleepDay) %>% 
+  summarize(media_slee = mean(TotalNoSleepMinutes))
+
+ggplot(data=time_sleep) +
+  geom_line(mapping = aes(x=SleepDay,y=media_slee))+
+  labs(title = "Eficiencia de sueño",x="Tiempo", y="Media de eficiencia de sueño")
+
+```
+
+### Conclusiones y Recomendaciones
+
+* Las personas necesitan una guía alimentaria, que conforme se ejerciten o hagan actividades controlen su alimentación, lo cual ofrecer un servicio además o más personalizado es un buen punto de partida.
+
+* Se recomienda generar métodos que mantengan a las personas motivadas para usar la app, y por consiguiente ser más consistentes en sus rutinas.
+
+* Se recomienda prestar atención a las personas que intentan adquirir las rutinas saludables, puesto que los clientes que hasta el momento se tienen registro son nuevas o no practican el deporte profesional, por ende no sabrían sacarle el máximo probecho.
+
+* A los 15 días de usar el fitbit los usuarios reportan alta mejoría en cuanto a la reducción del sedentarísmo, lo cual reduce hasta un 50% el sedentarísmo.
+
+* El sueño es más eficiente con relizar actividades, si se mantiene un poco la consistencia luego de un mes, el sueño se hace más eficiente.
+
+
+
+
+
+
+
