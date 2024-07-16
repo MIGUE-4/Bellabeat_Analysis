@@ -1,7 +1,4 @@
----
-title: "Readme"
-output: github_document
----
+
 <center><h1>Usa altas y modernas tecnologías <br> para el cuidado de tu salud</h1></center>
 
 <div style="text-align: center;">
@@ -26,7 +23,7 @@ Bellbeat como fabricante de dispositivos inteligentes, desea actuar aún más in
 Este conjunto de datos generado por los encuestados en una encuesta distribuida a través de Amazon Mechanical Turk entre el 03.12.2016-05.12.2016. Treinta usuarios elegibles de Fitbit dieron su consentimiento para el envío de datos de seguimiento personales, incluidos los resultados a nivel de minuto de la actividad física, la frecuencia cardíaca y la monitorización del sueño. Los informes individuales pueden analizarse por ID de sesión de exportación (columna A) o marca de tiempo (columna B). La variación entre los resultados representa el uso de diferentes tipos de rastreadores Fitbit y comportamientos / preferencias de seguimiento individuales.
 
 <div style="text-align: center;">
-<img src="https://storage.googleapis.com/diariodemocracia/cache/cb/ff/apuestas-depor-cfa0c5.jpg" style="width: 90%; height: auto;">
+<img src="https://storage.googleapis.com/diariodemocracia/cache/cb/ff/apuestas-depor-cfa0c5.jpg](https://img.freepik.com/foto-gratis/retrato-chicas-felices-hablando-campo-futbol-cuatro-lindas-chicas-caucasicas-ropa-deportiva-sentadas-suelo-levantando-manos-demostrar-su-fe-victoria-concepto-estilo-vida-saludable-deporte-equipo_74855-23923.jpg" style="width: 90%; height: auto;">
 </div>
 
 ## Objetivo de negocio
